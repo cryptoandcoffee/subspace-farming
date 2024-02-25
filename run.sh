@@ -23,3 +23,5 @@ sed -i -e "s/Tiny Chia Plot Manager/Chia Plot Manager/g" /plots/index.php
 mkdir -p /root/chia/final
 mkdir -p /root/chia/tmp2
 mkdir -p /root/chia/tmp
+
+farm --farm-during-initial-plotting=true --node-rpc-url ws://node:9944 --listen-on /ip4/0.0.0.0/udp/30533/quic-v1 --listen-on /ip4/0.0.0.0/tcp/30533 --reward-address st9V6Wmm2CP9nTWRxbQ6Fb4xUxadRTFrqGgCCTAyptjSotR4E path=/plots,size=100G
