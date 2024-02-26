@@ -22,24 +22,11 @@ sed -i -e "s/Tiny Chia Plot Manager/Subspace Plot Manager/g" /plots/index.php
 /etc/init.d/nginx start
 /etc/init.d/php8.1-fpm start
 
-#mkdir -p /root/chia/final
-#mkdir -p /root/chia/tmp2
-#mkdir -p /root/chia/tmp
-
-#./subspace-farmer-ubuntu-x86_64-v2-gemini-3h-2024-feb-19 farm --farm-during-initial-plotting=true --node-rpc-url ws://node:9944 --listen-on /ip4/0.0.0.0/udp/30533/quic-v1 --listen-on /ip4/0.0.0.0/tcp/30533 --reward-address $reward_address path=/plots,size=100G
-
-if [[ $ramdrive == "true" ]]; then
-  mkdir -p "${dir_path}"
-  mount -t tmpfs -o size=110G tmpfs "${dir_path}"
-fi
-
-
 echo "Using $plots plots"
 
 # Define base parameters
 base_command="./subspace-farmer-ubuntu-x86_64-v2-gemini-3h-2024-feb-19 farm --farm-during-initial-plotting=true --node-rpc-url ws://node:9944 --listen-on /ip4/0.0.0.0/udp/30533/quic-v1 --listen-on /ip4/0.0.0.0/tcp/30533 --reward-address \$reward_address"
 path_base="/plots/plot"
-#size="100G"
 
 # Create directories for each plot
 for (( i=1; i<=plots; i++ ))
@@ -51,8 +38,6 @@ do
       mount -t tmpfs -o size=$size tmpfs "${dir_path}"
     fi
 done
-
-
 
 echo "All directories created."
 
