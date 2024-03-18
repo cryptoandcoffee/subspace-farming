@@ -1,0 +1,99 @@
+---
+version: "2.0"
+services:
+  node:
+    image: ghcr.io/subspace/node:gemini-3h-2024-mar-18
+    expose:
+      - port: 30333
+        as: 30333
+        to:
+          - global: true
+      - port: 30433
+        as: 30433
+        to:
+          - global: true
+      - port: 9944
+        to:
+          - service: farmer
+    args:
+      - "run"
+      - "--chain"
+      - "gemini-3h"
+      - "--blocks-pruning"
+      - "256"
+      - "--state-pruning"
+      - "archive-canonical"
+      - "--base-path"
+      - "/var/subspace"
+      - "--listen-on"
+      - "/ip4/0.0.0.0/tcp/30333"
+      - "--dsn-listen-on"
+      - "/ip4/0.0.0.0/udp/30433/quic-v1"
+      - "--dsn-listen-on"
+      - "/ip4/0.0.0.0/tcp/30433"
+      - "--rpc-cors"
+      - "all"
+      - "--rpc-methods"
+      - "unsafe"
+      - "--rpc-listen-on"
+      - "0.0.0.0:9944"
+      - "--farmer"
+      - "--name"
+      - "akash"
+
+  farmer:
+    depends_on:
+      - node
+    image: cryptoandcoffee/subspace-farmer:4
+    expose:
+      - port: 30533
+        as: 30533
+        to:
+          - global: true
+      - port: 8080
+        as: 80
+        to:
+          - global: true
+    env:
+      - "plots=1"
+      - "size=100G"
+      - "reward_address=st98Ct8LsjMJGc71uS1gR6dbfwgy5FSf62cxTC2MSZmdWrZaf"
+      - "ramdrive=false"
+profiles:
+  compute:
+    node:
+      resources:
+        cpu:
+          units: 8.0
+        memory:
+          size: 16Gi
+        storage:
+          size: 200Gi
+    farmer:
+      resources:
+        cpu:
+          units: 32
+        memory:
+          size: 16Gi
+        storage:
+          size: 100Gi
+  placement:
+    akash:
+      attributes:
+      pricing:
+        node:
+          denom: uakt
+          amount: 10000
+        farmer:
+          denom: uakt
+          amount: 10000
+
+deployment:
+  node:
+    akash:
+      profile: node
+      count: 1
+  farmer:
+    akash:
+      profile: farmer
+      count: 1
