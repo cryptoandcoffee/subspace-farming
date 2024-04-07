@@ -2,7 +2,7 @@
 version: "2.0"
 services:
   node:
-    image: ghcr.io/subspace/node:gemini-3h-2024-mar-18
+    image: ghcr.io/subspace/node:gemini-3h-2024-mar-29
     expose:
       - port: 30333
         as: 30333
@@ -44,7 +44,7 @@ services:
   farmer:
     depends_on:
       - node
-    image: cryptoandcoffee/subspace-farmer:4
+    image: cryptoandcoffee/subspace-farmer:12
     expose:
       - port: 30533
         as: 30533
