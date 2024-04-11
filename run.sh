@@ -44,10 +44,10 @@ cpu_model=$(lscpu | grep "Model name" | cut -d ':' -f2 | xargs)
 echo "Detected CPU: $cpu_model"
 
 # Determine the appropriate release based on CPU model
-if [[ "$cpu_model" == *"Ryzen"* || "$cpu_model" == *"EPYC"* || "$cpu_model" == *"Skylake"* ]]; then
+if [[ "$cpu_model" == *"Ryzen"* || "$cpu_model" == *"EPYC"* || "$cpu_model" == *"v4"* || "$cpu_model" == *"v5"* || "$cpu_model" == *"Icelake"* ]]; then
   echo "Fetching the latest release for Ryzen from GitHub..."
   latest_release=$(curl -s https://api.github.com/repos/subspace/subspace/releases/latest | jq -r '.assets[] | select(.name | contains("farmer") and contains("ubuntu") and contains("x86_64")) | .browser_download_url' | head -n1)
-elif [[ "$cpu_model" == *"Broadwell"* || "$cpu_model" == *"Haswell"* ]]; then
+elif [[ "$cpu_model" == *"Broadwell"* || "$cpu_model" == *"Haswell"* || "$cpu_model" == *"v2"*  || "$cpu_model" == *"v3"* ]]; then
   echo "Fetching the latest V2 release for Broadwell from GitHub..."
   latest_release=$(curl -s https://api.github.com/repos/subspace/subspace/releases/latest | jq -r '.assets[] | select(.name | contains("farmer") and contains("v2") and contains("ubuntu") and contains("x86_64")) | .browser_download_url' | head -n1)
 else
